@@ -110,3 +110,4 @@ for e in range(epochs):
 
 print("Обучение завершено")
 print("Время обучения:", learning_time)
+input()
