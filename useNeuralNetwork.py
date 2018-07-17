@@ -1,7 +1,6 @@
 # Используем нейронную сеть
 import Experiments
 import numpy
-import matplotlib.pyplot as mplPyplot
 import time
 
 # Количество входных, скрытых и выходных узлов
