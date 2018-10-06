@@ -3,6 +3,7 @@ import Experiments
 import numpy
 import time
 
+
 # Количество входных, скрытых и выходных узлов
 input_nodes = 784
 hidden_nodes = 90

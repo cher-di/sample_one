@@ -1,20 +1,20 @@
-from time import clock
-from math import sqrt
-num = 10**4
+n = int(input())
 
-time_before = clock()
-def_prime = [2]
-for curr in range(3, num + 2, 2):
-    sqrt_curr = sqrt(curr) + 1
-    for prime in [i for i in def_prime if i < sqrt_curr]:
-        if curr % prime == 0:
-            break
+a = b = int(n // 3)
+c = n - a - b
+if a % 3 == 0:
+    a -= 1
+    b += 1
+
+if b % 3 == 0:
+    b -= 1
+    c += 1
+
+if c % 3 == 0:
+    if (b + 1) % 3 == 0:
+        b += 2
+        c -= 2
     else:
-        def_prime.append(curr)
-time_after = clock()
-
-for prime in def_prime:
-    print(prime)
-
-print('***********************')
-print('Время вычисления: {}'.format(time_after - time_before))
+        b += 1
+        c -= 1
+print(a, b, c)
