@@ -1,20 +1,22 @@
-n = int(input())
+def equal(weight, num, curr_sum, target):
+    if curr_sum == target:
+        return 'YES'
+    if curr_sum > target:
+        return 'NO'
+    if num == -1:
+        return 'NO'
+    res1 = equal(weight, num - 1, curr_sum + weight[num], target)
+    res2 = equal(weight, num - 1, curr_sum, target)
+    if res1 == 'YES' or res2 == 'YES':
+        return 'YES'
+    return 'NO'
 
-a = b = int(n // 3)
-c = n - a - b
-if a % 3 == 0:
-    a -= 1
-    b += 1
-
-if b % 3 == 0:
-    b -= 1
-    c += 1
-
-if c % 3 == 0:
-    if (b + 1) % 3 == 0:
-        b += 2
-        c -= 2
-    else:
-        b += 1
-        c -= 1
-print(a, b, c)
+s = input().split()
+weight = [int(i) for i in s]
+if sum(weight) % 2:
+    print('NO')
+else:
+    target =  sum(weight)//2;
+    num = len(weight) - 1
+    curr_sum = 0
+    print(equal(weight, num, curr_sum, target))
