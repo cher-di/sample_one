@@ -57,30 +57,33 @@ class NeuralNetwork():
 
             for layer_num in range(self.NL - 1,  0, -1):
                 diff_activation = 1 / (1 + inside[i] ** 2)
-                # bias_shapes = (outputs[i - 1].shape[1], outputs[i - 1].shape[0])
-                # diff_bias = np.dot(curr_errors*diff_activation, np.ones(bias_shapes))
-                diff_bias = curr_errors*diff_activation
+                #diff_bias = curr_errors*diff_activation
+                bias_shapes = (outputs[i - 1].shape[1], outputs[i - 1].shape[0])
+                diff_bias = np.dot(curr_errors*diff_activation, np.ones(bias_shapes))
                 diff_weights = np.dot(curr_errors*diff_activation, outputs[i - 1].T)
                 self.LW[i] = self.LW[i] - learning_rate * diff_weights
                 self.Lb[i] = self.Lb[i] - learning_rate * diff_bias
-                for_multiply_curr_errors = (np.dot(diff_activation, np.ones((diff_activation.shape[1], \
-                                                                                 self.NN[i - 1])))*self.LW[i]).T
+                for_multiply_curr_errors = (np.dot(diff_activation, np.ones((diff_activation.shape[1], self.NN[i - 1])))*self.LW[i]).T
                 curr_errors = np.dot(for_multiply_curr_errors, curr_errors)
 
             diff_activation = 1 / (1 + inside[0] ** 2)
-            # bias_shapes = (inputs.shape[1], inputs.shape[0])
-            # diff_bias = np.dot(curr_errors*diff_activation, np.ones(bias_shapes))
-            diff_bias = curr_errors*diff_activation
+            #diff_bias = curr_errors*diff_activation
+            bias_shapes = (inputs.shape[1], inputs.shape[0])
+            diff_bias = np.dot(curr_errors * diff_activation, np.ones(bias_shapes))
             diff_weights = np.dot(curr_errors*diff_activation, inputs.T)
             self.LW[0] = self.LW[0] - learning_rate * diff_weights
             self.Lb[0] = self.Lb[0] - learning_rate * diff_bias
 
-a = NeuralNetwork(10, 2, (10, 1))
-print(a.Lb[0].shape)
-print(a.Lb[1].shape)
+a = NeuralNetwork(1, 2, (10, 1))
+print('LW1 =', a.LW[0].shape)
+print('LW2 =', a.LW[1].shape)
+print('Lb1 =', a.Lb[0].shape)
+print('Lb2 =', a.Lb[1].shape)
 print(a.count(0))
 a.train(1, 0.01, 1)
-print(a.Lb[0].shape)
-print(a.Lb[1].shape)
+print('LW1 =', a.LW[0].shape)
+print('LW2 =', a.LW[1].shape)
+print('Lb1 =', a.Lb[0].shape)
+print('Lb2 =', a.Lb[1].shape)
 print(a.count(0))
 
