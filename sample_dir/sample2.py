@@ -7,10 +7,11 @@ class NeuralNetwork():
     def __init__(self, NI, NL, NN):
         self.NL = NL
         self.NI = NI
-        self.LW = [np.random.rand(NN[i], NN[i - 1]) for i in range(0, NL)]
+        self.LW = [np.random.rand(NN[0], NI)]
+        self.LW += [np.random.rand(NN[i], NN[i - 1]) for i in range(1, NL)]
         self.Lb = [np.random.rand(NN[i], 1) for i in range(NL)]
-        self.LW[0] = np.random.rand(NN[0], NI)
-        self.Lb[0] = np.random.rand(NN[0], 1)
+        # self.LW[0] = np.random.rand(NN[0], NI)
+        # self.Lb[0] = np.random.rand(NN[0], 1)
         self.NN = NN
         self.activation_function = lambda x: np.arctan(x)
         self.func = lambda x: np.sin(x)
@@ -24,26 +25,13 @@ class NeuralNetwork():
             curr_signal = self.activation_function(np.dot(self.LW[i], curr_signal) + self.Lb[i])
         return curr_signal
 
-    # def count_for_train(self, X):
-    #     # count output signal for training
-    #     outputs = [None for i in range(self.NL)]
-    #     outputs[0] = np.array(X).T
-    #     outputs[0] = self.activation_function(np.dot(self.LW[0], outputs[0]) + self.Lb[0])
-    #     for i in range(1, self.NL):
-    #         outputs[i] = self.activation_function(np.dot(self.LW[i], outputs[i - 1]) + self.Lb[i])
-    #     return outputs
-
     def train(self, learning_rate, interval):
         random.seed()
         num_of_div = 100
         input_all = np.linspace(0, interval, num_of_div)
         random.shuffle(input_all)
         for input in input_all:
-            #num_of_div = 100
-            #input = np.linspace(0, interval, num_of_div)
-            #random.shuffle(input)
             input = np.array((input))
-            #input = input.reshape((1, num_of_div))
             targets = self.func(input)
 
             # count output signal for training: outputs
@@ -63,8 +51,6 @@ class NeuralNetwork():
             for layer_num in range(self.NL - 1,  0, -1):
                 diff_activation = 1 / (1 + inside[i] ** 2)
                 diff_bias = curr_errors*diff_activation
-                # bias_shapes = (outputs[i - 1].shape[1], outputs[i - 1].shape[0])
-                # diff_bias = np.dot(curr_errors*diff_activation, np.ones(bias_shapes))
                 diff_weights = np.dot(curr_errors*diff_activation, outputs[i - 1].T)
                 self.LW[i] = self.LW[i] - learning_rate * diff_weights
                 self.Lb[i] = self.Lb[i] - learning_rate * diff_bias
@@ -73,17 +59,34 @@ class NeuralNetwork():
 
             diff_activation = 1 / (1 + inside[0] ** 2)
             diff_bias = curr_errors*diff_activation
-            # bias_shapes = (inputs.shape[1], inputs.shape[0])
-            # diff_bias = np.dot(curr_errors * diff_activation, np.ones(bias_shapes))
             diff_weights = np.dot(curr_errors*diff_activation, input.T)
             self.LW[0] = self.LW[0] - learning_rate * diff_weights
             self.Lb[0] = self.Lb[0] - learning_rate * diff_bias
 
-a = NeuralNetwork(1, 3, (3, 3, 1))
-for i in range(10):
-    a.train(0.01, 1)
+# tests
+a = NeuralNetwork(1, 2, (3, 1))
 
-test = np.linspace(0, 1, 100)
-print('Errors')
-for index, value in enumerate(test):
-    print('test ', index, ':', fabs(sin(value) - a.count(value)))
+test_num = 1000
+interval = np.pi
+test_set = np.linspace(0, interval, test_num)
+
+# опрос сети сразу после создания
+mean_error = 0
+for test in test_set:
+    mean_error += fabs(sin(test) - a.count(test))
+mean_error = mean_error / test_num
+print('Mean error before train:', mean_error)
+
+# опрос сети после каждой 100 тренировок
+
+print('Mean error per every 100 iteration:')
+
+for i in range(1, 10001):
+    a.train(0.01, interval)
+
+    if not(i % 100):
+        mean_error = 0
+        for test in test_set:
+            mean_error += fabs(sin(test) - a.count(test))
+        mean_error = mean_error / test_num
+        print(i, ':', mean_error)

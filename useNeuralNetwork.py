@@ -49,7 +49,6 @@ for e in range(epochs):
         # тренируем сеть
         n.train(inputs, targets)
         
-        pass
     # время конца очередной эпохи тренировки
     after = time.time()
 
@@ -94,8 +93,6 @@ for e in range(epochs):
             # В случае неправильного ответа сети присоединить
             # к списку значение 0
             scorecard.append(0)
-            pass
-        pass
 
     query_time = time.time() - time_before_query
     print("Сеть опрошена")
@@ -106,7 +103,6 @@ for e in range(epochs):
     scorecard_array = numpy.asarray(scorecard)
     print("Эффективность =", scorecard_array.sum() / scorecard_array.size, '\n\n')
     
-    pass
 
 print("Обучение завершено")
 print("Время обучения:", learning_time)
