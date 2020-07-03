@@ -25,6 +25,12 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Checkout sources
       uses: actions/checkout@v2
+      
+    # Install Python packages
+    - name: Install Python packages
+      run: |
+        python3 -m pip install --upgrade pip setuptools
+        python3 -m pip install --upgrade -r requirements.txt
 
     # Runs a single command using the runners shell
     - name: Run main.py
